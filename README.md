@@ -17,10 +17,9 @@
 
 ### Assessment & Analysis
 
-- **Privacy Exposure Assessment** — Evaluate your digital vulnerability across the services you use. Generates a 0–100 Exposure Score using an 8-factor model.
-- **Privacy Rights Checkup** — Test your knowledge of GDPR, CCPA, PIPEDA, and LGPD rights so you can exercise them effectively.
-- **Security Awareness Assessment** — Quiz-style assessment that surfaces knowledge gaps in day-to-day security hygiene.
-- **9 Privacy Personas** — Client-side persona detection engine maps your answers to one of 9 profiles (Cautious Parent, Digital Novice, Privacy Advocate, Online Shopper, Social Influencer, Private Individual, Concerned Employee, Data Controller, Student). Recommendations adapt accordingly.
+- **Privacy Exposure Assessment** (`/assessment/exposure`) — Evaluates your digital vulnerability across the services you use. Generates a 0–100 Exposure Score using an 8-factor model. ~8 minutes.
+- **Privacy Rights Checkup** (`/assessment/privacy-rights`) — Tests your working knowledge of GDPR, CCPA, PIPEDA, and LGPD so you know which rights to exercise and how. ~7 minutes.
+- **9 Privacy Personas** — Client-side persona detection engine maps your answers to one of 9 profiles (Cautious Parent, Digital Novice, Privacy Advocate, Online Shopper, Social Influencer, Private Individual, Concerned Employee, Data Controller, Student). Dashboard recommendations, resources, and tools adapt accordingly.
 - **Digital Footprint Analysis** — Aggregates Privacy Exposure Indices from all monitored services into a unified 0–100 Digital Footprint Score with factor-level breakdowns.
 
 ### Service Intelligence
@@ -170,10 +169,9 @@ Planned at $7.99/month — everything in Premium plus shared family dashboard, u
 
 | Path | Description |
 |------|-------------|
-| `/assessment` | Assessment hub (two cards + value hook, collapsible disclaimer) |
-| `/assessment/exposure` | Privacy Risk Exposure Assessment |
-| `/assessment/privacy-rights` | Privacy Rights Checkup |
-| `/assessment/:type` | Dynamic router (`full`, `exposure`, `rights`) |
+| `/assessment` | Assessment hub — two cards, value hook, collapsible disclaimer |
+| `/assessment/exposure` | Privacy Exposure Assessment (~8 min) |
+| `/assessment/privacy-rights` | Privacy Rights Checkup (~7 min) |
 
 ### Dashboard & Personalisation
 
