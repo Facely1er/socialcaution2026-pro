@@ -4,7 +4,7 @@
 
 **A persona-based privacy platform.** Protecting your digital life, your way.
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-Proprietary-red.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18.3-blue)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-7.2-purple)](https://vitejs.dev/)
@@ -453,25 +453,31 @@ npm run test:coverage    # Coverage report
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature`
-3. Make changes and add tests
-4. Run `npm run lint && npm run test:run`
-5. Commit and push, then open a pull request
+This is a private repository. Contributions are by invitation only.
+
+1. Create a feature branch from `main`: `git checkout -b feature/your-feature`
+2. Make changes and add tests
+3. Run `npm run lint && npm run test:run`
+4. Commit and push, then open a pull request for review
 
 ---
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+Copyright (c) 2026 ERMITS LLC. All rights reserved.
+
+This is proprietary software. No permission is granted to use, copy, modify,
+distribute, or sublicense this software without the express prior written
+consent of ERMITS LLC. See [LICENSE](LICENSE) for full terms.
+
+For licensing enquiries: legal@ermits.com
 
 ---
 
 ## Support
 
-- **Bug reports**: [GitHub Issues](https://github.com/Facely1er/socialcaution2026-pro/issues)
-- **Feature requests**: [GitHub Discussions](https://github.com/Facely1er/socialcaution2026-pro/discussions)
 - **Email**: support@ermits.com
+- **Licensing enquiries**: legal@ermits.com
 
 ---
 
