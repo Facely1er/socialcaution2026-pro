@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Activity, Shield, AlertTriangle, TrendingDown, TrendingUp, Globe, Users, ShoppingCart, MessageCircle, Film, Database, BarChart3, Target, ArrowRight, ExternalLink, Gauge, Info } from 'lucide-react';
+import { Activity, Shield, AlertTriangle, TrendingDown, TrendingUp, Globe, Users, ShoppingCart, MessageCircle, Film, Database, BarChart3, Target, ArrowRight, ExternalLink, Gauge, Info, Lock, Sparkles } from 'lucide-react';
 import { serviceCatalog } from '../data/serviceCatalog';
 import { serviceRiskProfiles } from '../data/serviceRiskProfiles';
 import { getToolsByService } from '../data/tools.js';
@@ -240,10 +240,10 @@ const DigitalFootprintAnalysis = ({ assessmentResults, selectedServices, persona
           </div>
           <div className="flex gap-4 justify-center">
             <button
-              onClick={() => navigate('/assessment/full')}
+              onClick={() => navigate('/assessment')}
               className="px-6 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors font-medium flex items-center gap-2"
             >
-              Complete Assessment
+              Take Assessment
               <ArrowRight className="w-5 h-5" />
             </button>
             <button
@@ -265,6 +265,13 @@ const DigitalFootprintAnalysis = ({ assessmentResults, selectedServices, persona
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [showScoreInfo, setShowScoreInfo] = useState(false);
+
+  const isPremium = (() => {
+    try {
+      const sub = JSON.parse(localStorage.getItem('socialcaution_subscription') || '{}');
+      return sub.tier === 'premium' || sub.tier === 'family';
+    } catch { return false; }
+  })();
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -355,108 +362,143 @@ const DigitalFootprintAnalysis = ({ assessmentResults, selectedServices, persona
         </div>
       </div>
 
-      {/* Service Categories */}
-      {serviceCategories.length > 0 && (
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 mb-6">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-            <BarChart3 className="w-6 h-6" />
-            Services by Category
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {serviceCategories.map((cat) => {
-              const Icon = getCategoryIcon(cat.category);
-              return (
-                <div key={cat.category} className="text-center p-4 bg-gray-50 dark:bg-slate-700 rounded-lg">
-                  <Icon className="w-8 h-8 mx-auto mb-2 text-gray-600 dark:text-gray-400" />
-                  <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{cat.count}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-300">{cat.label}</div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
+      {/* Factor-level detail — Premium gated */}
+      {isPremium ? (
+        <>
+          {/* Service Categories */}
+          {serviceCategories.length > 0 && (
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 mb-6">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <BarChart3 className="w-6 h-6" />
+                Services by Category
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {serviceCategories.map((cat) => {
+                  const Icon = getCategoryIcon(cat.category);
+                  return (
+                    <div key={cat.category} className="text-center p-4 bg-gray-50 dark:bg-slate-700 rounded-lg">
+                      <Icon className="w-8 h-8 mx-auto mb-2 text-gray-600 dark:text-gray-400" />
+                      <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{cat.count}</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-300">{cat.label}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
-      {/* High-Risk Services */}
-      {serviceRisks.length > 0 && (
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 mb-6">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-            <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400" />
-            High-Risk Services
-          </h3>
-          <div className="space-y-3">
-            {serviceRisks.slice(0, 5).map((service) => (
-              <div key={service.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700 rounded-lg">
-                <div className="flex-1">
-                  <div className="font-semibold text-gray-900 dark:text-white">{service.name}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-300">
-                    {service.risks.length} known privacy risks
-                    {service.exposureIndex !== null && (
-                      <span className={`ml-2 font-medium ${service.exposureLevel.textColor}`}>
-                        • Exposure: {service.exposureIndex}/100
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  {service.exposureIndex !== null && (
-                    <div className="flex items-center gap-1">
-                      <Gauge className={`w-4 h-4 ${service.exposureLevel.textColor}`} />
-                      <span className={`text-xs font-medium ${service.exposureLevel.textColor}`}>
-                        {service.exposureIndex}
+          {/* High-Risk Services */}
+          {serviceRisks.length > 0 && (
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 mb-6">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400" />
+                High-Risk Services
+              </h3>
+              <div className="space-y-3">
+                {serviceRisks.slice(0, 5).map((service) => (
+                  <div key={service.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700 rounded-lg">
+                    <div className="flex-1">
+                      <div className="font-semibold text-gray-900 dark:text-white">{service.name}</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-300">
+                        {service.risks.length} known privacy risks
+                        {service.exposureIndex !== null && (
+                          <span className={`ml-2 font-medium ${service.exposureLevel.textColor}`}>
+                            • Exposure: {service.exposureIndex}/100
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {service.exposureIndex !== null && (
+                        <div className="flex items-center gap-1">
+                          <Gauge className={`w-4 h-4 ${service.exposureLevel.textColor}`} />
+                          <span className={`text-xs font-medium ${service.exposureLevel.textColor}`}>
+                            {service.exposureIndex}
+                          </span>
+                        </div>
+                      )}
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        service.riskLevel >= 3 ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
+                        service.riskLevel >= 2 ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                        'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                      }`}>
+                        {service.riskLevel >= 3 ? 'High Risk' : service.riskLevel >= 2 ? 'Moderate' : 'Low Risk'}
                       </span>
                     </div>
-                  )}
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    service.riskLevel >= 3 ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
-                    service.riskLevel >= 2 ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                    'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                  }`}>
-                    {service.riskLevel >= 3 ? 'High Risk' : service.riskLevel >= 2 ? 'Moderate' : 'Low Risk'}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Recommendations */}
-      {recommendations.length > 0 && (
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 mb-6">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-            <Target className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-            Personalized Recommendations
-          </h3>
-          <div className="space-y-4">
-            {recommendations.map((rec, index) => (
-              <div key={index} className={`p-4 rounded-lg border-l-4 ${
-                rec.priority === 'high' 
-                  ? 'bg-red-50 dark:bg-red-900/20 border-red-500' 
-                  : 'bg-blue-50 dark:bg-blue-900/20 border-blue-500'
-              }`}>
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900 dark:text-white mb-1">{rec.title}</h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">{rec.description}</p>
-                    {rec.services && (
-                      <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">
-                        Services: {rec.services.join(', ')}
-                      </div>
-                    )}
-                    {rec.action && (
-                      <button
-                        onClick={() => navigate(rec.action.url)}
-                        className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
-                      >
-                        {rec.action.label}
-                        <ArrowRight className="w-4 h-4" />
-                      </button>
-                    )}
                   </div>
-                </div>
+                ))}
               </div>
-            ))}
+            </div>
+          )}
+
+          {/* Recommendations */}
+          {recommendations.length > 0 && (
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 mb-6">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <Target className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                Personalized Recommendations
+              </h3>
+              <div className="space-y-4">
+                {recommendations.map((rec, index) => (
+                  <div key={index} className={`p-4 rounded-lg border-l-4 ${
+                    rec.priority === 'high'
+                      ? 'bg-red-50 dark:bg-red-900/20 border-red-500'
+                      : 'bg-blue-50 dark:bg-blue-900/20 border-blue-500'
+                  }`}>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-900 dark:text-white mb-1">{rec.title}</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">{rec.description}</p>
+                      {rec.services && (
+                        <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                          Services: {rec.services.join(', ')}
+                        </div>
+                      )}
+                      {rec.action && (
+                        <button
+                          onClick={() => navigate(rec.action.url)}
+                          className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+                        >
+                          {rec.action.label}
+                          <ArrowRight className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
+        /* Free tier — premium upgrade gate */
+        <div className="relative mb-6 rounded-xl overflow-hidden border border-purple-200 dark:border-purple-800">
+          {/* Blurred preview of what's behind the gate */}
+          <div className="opacity-20 blur-sm pointer-events-none select-none p-6 space-y-4" aria-hidden="true">
+            <div className="h-6 w-48 bg-gray-300 dark:bg-slate-600 rounded" />
+            <div className="grid grid-cols-4 gap-4">
+              {[1,2,3,4].map(i => <div key={i} className="h-20 bg-gray-200 dark:bg-slate-700 rounded-lg" />)}
+            </div>
+            <div className="h-6 w-40 bg-gray-300 dark:bg-slate-600 rounded mt-4" />
+            {[1,2,3].map(i => <div key={i} className="h-14 bg-gray-100 dark:bg-slate-700 rounded-lg" />)}
+          </div>
+          {/* Overlay */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/80 dark:bg-slate-900/80 p-8 text-center">
+            <div className="w-14 h-14 bg-purple-100 dark:bg-purple-900/40 rounded-2xl flex items-center justify-center mb-4">
+              <Lock className="w-7 h-7 text-purple-600 dark:text-purple-400" />
+            </div>
+            <p className="text-base font-bold text-gray-900 dark:text-white mb-2">
+              Factor-level detail is a Premium feature
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-5 max-w-sm">
+              Upgrade to see your per-category breakdown, high-risk service list, and personalised action recommendations.
+            </p>
+            <button
+              onClick={() => navigate('/pricing')}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-md"
+            >
+              <Sparkles className="w-4 h-4" />
+              Unlock with Premium — $2.99/mo
+            </button>
           </div>
         </div>
       )}

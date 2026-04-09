@@ -1,10 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shield, Target, LayoutDashboard, ArrowRight } from 'lucide-react';
+import { Shield, Target, Activity, ArrowRight } from 'lucide-react';
 
 /**
  * How It Works — 3-step customer journey.
- * Replaces the old 6-card "What You Can Do" section to reduce choice overload.
+ * Step 3 leads to Digital Footprint Analysis as the tangible outcome.
  */
 const WhatYouCanDoSection = ({ className = '' }) => {
   const navigate = useNavigate();
@@ -13,8 +13,8 @@ const WhatYouCanDoSection = ({ className = '' }) => {
     {
       step: '01',
       icon: Shield,
-      title: 'Browse Services',
-      description: 'Search 200+ apps and platforms to see exactly how they collect, share, and protect your data — with a clear privacy risk score for each.',
+      title: 'Monitor Your Services',
+      description: 'Search 222+ apps and platforms to see exactly how they collect, share, and expose your data — each rated with a clear privacy risk score.',
       linkText: 'Open Service Catalog',
       action: () => navigate('/service-catalog'),
       iconBg: 'bg-red-500',
@@ -24,7 +24,7 @@ const WhatYouCanDoSection = ({ className = '' }) => {
       step: '02',
       icon: Target,
       title: 'Take a Privacy Assessment',
-      description: 'Answer a short set of questions about your digital habits. In minutes you get a personalised exposure score and a recommended action plan.',
+      description: 'Two focused assessments — one on your exposure risk, one on your privacy rights. Together they take 15 minutes and generate your personal exposure score.',
       linkText: 'Start Assessment',
       action: () => navigate('/assessment'),
       iconBg: 'bg-green-500',
@@ -32,13 +32,13 @@ const WhatYouCanDoSection = ({ className = '' }) => {
     },
     {
       step: '03',
-      icon: LayoutDashboard,
-      title: 'Act on Your Dashboard',
-      description: 'Your personalised dashboard turns results into clear next steps: alerts for the services you use, tools to reduce exposure, and progress tracking.',
-      linkText: 'View Dashboard',
-      action: () => navigate('/dashboard'),
-      iconBg: 'bg-blue-500',
-      accent: 'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300',
+      icon: Activity,
+      title: 'See Your Digital Footprint',
+      description: 'Your assessment results + monitored services combine into a single 0–100 Digital Footprint Score. One number that shows your full privacy exposure — and exactly where to act.',
+      linkText: 'View My Footprint',
+      action: () => navigate('/digital-footprint-analysis'),
+      iconBg: 'bg-purple-500',
+      accent: 'text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300',
     },
   ];
 
@@ -51,7 +51,7 @@ const WhatYouCanDoSection = ({ className = '' }) => {
             How it works
           </p>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3">
-            Three steps to take control
+            From services to your Digital Footprint Score
           </h2>
           <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-xl mx-auto">
             No account needed. Start anywhere and pick up where you left off.
