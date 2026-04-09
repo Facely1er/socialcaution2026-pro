@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TrendingDown, TrendingUp, Shield, Scale, User, ChevronRight, Lock as LockIcon, Target, Zap, Clock, AlertCircle, CheckCircle2, Star, Trophy, ArrowRight, BookOpen, ChevronDown, ChevronUp } from 'lucide-react';
+import { TrendingDown, TrendingUp, Shield, Scale, User, ChevronRight, Lock as LockIcon, Target, Zap, Clock, AlertCircle, CheckCircle2, Star, Trophy, ArrowRight, BookOpen, ChevronDown, ChevronUp, Activity } from 'lucide-react';
 import ContextualLinks from '../common/ContextualLinks';
 import RelatedContent from '../common/RelatedContent';
 import LoadingSpinner from '../common/LoadingSpinner';
@@ -529,6 +529,40 @@ const AssessmentResults = ({ exposureResults, rightsResults, completeAssessmentR
             </button>
           </div>
         )}
+
+        {/* Digital Footprint Score teaser — bridge from assessment to DFA */}
+        {(() => {
+          let serviceCount = 0;
+          try { serviceCount = JSON.parse(localStorage.getItem('socialcaution_services') || '[]').length; } catch {}
+          const hasServices = serviceCount > 0;
+          return (
+            <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border border-purple-200 dark:border-purple-800 rounded-xl p-5 mb-6">
+              <div className="flex items-start gap-4">
+                <div className="p-2.5 bg-purple-600 rounded-xl flex-shrink-0">
+                  <Activity className="w-5 h-5 text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold text-purple-900 dark:text-purple-100 mb-1">
+                    {hasServices ? 'Your Digital Footprint Score is ready' : 'Unlock your Digital Footprint Score'}
+                  </p>
+                  <p className="text-xs text-purple-700 dark:text-purple-300 mb-3">
+                    {hasServices
+                      ? `Your assessment results + ${serviceCount} monitored service${serviceCount !== 1 ? 's' : ''} combine into a single 0–100 risk rating with factor-level breakdown.`
+                      : 'Add the apps and platforms you actually use to combine with these results — you\'ll get a unified 0–100 Digital Footprint Score showing exactly where your exposure is highest.'}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => navigate(hasServices ? '/digital-footprint-analysis' : '/service-catalog')}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold rounded-lg transition-colors"
+                  >
+                    {hasServices ? 'See Full Analysis' : 'Add Services First'}
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Detected Persona */}
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-8 mb-6">
