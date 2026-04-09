@@ -350,6 +350,10 @@ const PersonalizedDashboard = ({ userProfile, assessmentResults, persona, person
   // Check if user has standard/premium access
   const hasStandardAccess = subscriptionStatus.tier === 'premium' || subscriptionStatus.tier === 'family';
 
+  // Progressive disclosure: "new user" = has completed workflow but missing one assessment or few services
+  const hasBothAssessments = !!(activeAssessmentResults?.exposureScore && activeAssessmentResults?.rightsScore);
+  const isNewUser = !hasBothAssessments || selectedServices.length < 3;
+
   // If workflow is not complete, show workflow completion guide
   if (!workflowStatus.isComplete) {
     return <WorkflowCompletionGuide workflowStatus={workflowStatus} />;
@@ -1665,19 +1669,43 @@ ${rightsScore < 50
               </button>
             </div>
 
-            {/* Trends Tracker Module - Service-based privacy regulations */}
-            {selectedServices.length > 0 && (
-              <TrendsTrackerModule 
-                selectedServices={selectedServices}
-                maxItems={3}
-              />
+            {/* Advanced modules: unlock after both assessments + ≥3 services */}
+            {!isNewUser ? (
+              <>
+                {selectedServices.length > 0 && (
+                  <TrendsTrackerModule
+                    selectedServices={selectedServices}
+                    maxItems={3}
+                  />
+                )}
+                <RSSFeedAlertsPanel />
+                <PrivacyRadarWidget />
+              </>
+            ) : (
+              <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-5">
+                <div className="flex items-start gap-3">
+                  <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex-shrink-0">
+                    <Zap className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white mb-1">Your next step</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                      {!hasBothAssessments
+                        ? 'Complete both assessments to unlock trend tracking, live alerts, and your privacy radar.'
+                        : 'Monitor at least 3 services to unlock personalised trend tracking and live security alerts.'}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => navigate(!hasBothAssessments ? '/assessment' : '/service-catalog')}
+                      className="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1"
+                    >
+                      {!hasBothAssessments ? 'Complete assessment' : 'Browse services'}
+                      <ArrowRight className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+              </div>
             )}
-
-            {/* RSS Feed Alerts - Real-time security alerts from open-source feeds */}
-            <RSSFeedAlertsPanel />
-            
-            {/* Privacy Radar Widget */}
-            <PrivacyRadarWidget />
 
             {/* Contextual Navigation */}
             <ContextualLinks

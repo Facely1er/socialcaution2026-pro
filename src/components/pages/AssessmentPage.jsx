@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Search, FileCheck, Clock, Info, ArrowRight, BookOpen, CheckCircle, Zap, Target, AlertTriangle } from 'lucide-react';
+import { Search, FileCheck, Clock, ChevronDown, ChevronUp, ArrowRight, CheckCircle, Zap } from 'lucide-react';
 import AssessmentNav from '../navigation/AssessmentNav';
 import EnhancedBreadcrumbs from '../common/EnhancedBreadcrumbs';
 import ThemeToggle from '../common/ThemeToggle';
@@ -9,6 +9,7 @@ import { useTranslation } from '../../contexts/TranslationContext';
 
 const AssessmentPage = () => {
   const { t } = useTranslation();
+  const [disclaimerOpen, setDisclaimerOpen] = useState(false);
 
   const assessments = [
     {
@@ -34,24 +35,8 @@ const AssessmentPage = () => {
   ];
 
   const colorClasses = {
-    red: {
-      bg: 'bg-red-500',
-      hover: 'hover:bg-red-600',
-      text: 'text-red-600',
-      bgLight: 'bg-red-50 dark:bg-red-900/20'
-    },
-    orange: {
-      bg: 'bg-orange-500',
-      hover: 'hover:bg-orange-600',
-      text: 'text-orange-600',
-      bgLight: 'bg-orange-50 dark:bg-orange-900/20'
-    },
-    green: {
-      bg: 'bg-green-500',
-      hover: 'hover:bg-green-600',
-      text: 'text-green-600',
-      bgLight: 'bg-green-50 dark:bg-green-900/20'
-    }
+    red:    { bg: 'bg-red-500',    hover: 'hover:bg-red-600',    text: 'text-red-600',    bgLight: 'bg-red-50 dark:bg-red-900/20' },
+    orange: { bg: 'bg-orange-500', hover: 'hover:bg-orange-600', text: 'text-orange-600', bgLight: 'bg-orange-50 dark:bg-orange-900/20' },
   };
 
   return (
@@ -66,39 +51,54 @@ const AssessmentPage = () => {
 
         <div className="flex flex-col lg:flex-row gap-8">
           <AssessmentNav />
-          
+
           <div className="flex-1">
-            {/* Educational Disclaimer */}
+            {/* Value hook — replaces the blocking disclaimer */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.5 }}
               className="mb-8"
             >
-              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
-                <div className="flex items-start">
-                  <AlertTriangle className="h-6 w-6 text-blue-600 dark:text-blue-400 mt-0.5 mr-4 flex-shrink-0" />
-                  <div className="text-sm text-blue-800 dark:text-blue-200">
-                    <p className="font-semibold mb-2 text-lg">{t('assessmentPage.educationalDisclaimer.title')}</p>
-                    <p className="mb-2">{t('assessmentPage.educationalDisclaimer.intro')}</p>
-                    <ul className="list-disc list-inside mb-2 space-y-1">
-                      {t('assessmentPage.educationalDisclaimer.provides').map((item, index) => (
-                        <li key={index}>{item}</li>
-                      ))}
-                    </ul>
-                    <p className="mb-2">{t('assessmentPage.educationalDisclaimer.notProvides')}</p>
-                    <ul className="list-disc list-inside space-y-1">
-                      {t('assessmentPage.educationalDisclaimer.notProvidesList').map((item, index) => (
-                        <li key={index}>{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                  Privacy Assessments
+                </h1>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs font-semibold">
+                  <Zap className="w-3 h-3" />
+                  Free · No signup
+                </span>
               </div>
+              <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 mb-3">
+                Two assessments. 15 minutes total. A full picture of your privacy exposure <em>and</em> your rights.
+              </p>
+
+              {/* Collapsible disclaimer */}
+              <button
+                type="button"
+                onClick={() => setDisclaimerOpen(v => !v)}
+                className="inline-flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              >
+                {disclaimerOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                {disclaimerOpen ? 'Hide' : 'What this assessment covers'}
+              </button>
+              {disclaimerOpen && (
+                <div className="mt-2 p-4 bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-sm text-gray-600 dark:text-gray-300 space-y-2">
+                  <p className="font-semibold text-gray-800 dark:text-gray-200">{t('assessmentPage.educationalDisclaimer.title')}</p>
+                  <p>{t('assessmentPage.educationalDisclaimer.intro')}</p>
+                  <ul className="list-disc list-inside space-y-1">
+                    {t('assessmentPage.educationalDisclaimer.provides').map((item, i) => <li key={i}>{item}</li>)}
+                  </ul>
+                  <p>{t('assessmentPage.educationalDisclaimer.notProvides')}</p>
+                  <ul className="list-disc list-inside space-y-1">
+                    {t('assessmentPage.educationalDisclaimer.notProvidesList').map((item, i) => <li key={i}>{item}</li>)}
+                  </ul>
+                </div>
+              )}
             </motion.div>
 
-            {/* Assessment Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            {/* Assessment Cards — 2-col, centred */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 max-w-3xl">
               {assessments.map((assessment, index) => {
                 const Icon = assessment.icon;
                 const colors = colorClasses[assessment.color];
@@ -112,44 +112,42 @@ const AssessmentPage = () => {
                     className="h-full"
                   >
                     <Link to={assessment.path} className="h-full block group">
-                      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 h-full hover:shadow-lg transition-all duration-300 cursor-pointer">
-                        <div className="flex flex-col h-full">
-                          {/* Header */}
-                          <div className="flex items-start mb-4">
-                            <div className={`p-3 ${colors.bgLight} rounded-lg mr-4 flex-shrink-0`}>
-                              <Icon className={`h-8 w-8 ${colors.text} dark:text-${assessment.color}-400`} />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-orange-500 transition-colors duration-300">
-                                {assessment.title}
-                              </h3>
-                              <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                                <Clock className="h-4 w-4 mr-2" />
-                                <span className="font-medium">{assessment.duration}</span>
-                              </div>
+                      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 h-full hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col">
+                        {/* Header */}
+                        <div className="flex items-start mb-4">
+                          <div className={`p-3 ${colors.bgLight} rounded-lg mr-4 flex-shrink-0`}>
+                            <Icon className={`h-7 w-7 ${colors.text} dark:text-${assessment.color}-400`} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 group-hover:text-orange-500 transition-colors">
+                              {assessment.title}
+                            </h3>
+                            <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
+                              <Clock className="h-3.5 w-3.5 mr-1.5" />
+                              <span className="font-medium">{assessment.duration}</span>
                             </div>
                           </div>
+                        </div>
 
-                          {/* Description */}
-                          <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed flex-1">
-                            {assessment.description}
-                          </p>
+                        {/* Description */}
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-5 leading-relaxed flex-1">
+                          {assessment.description}
+                        </p>
 
-                          {/* Features */}
-                          <div className="space-y-3 mb-6">
-                            {assessment.features.map((feature, featureIndex) => (
-                              <div key={featureIndex} className="flex items-center text-sm text-gray-600 dark:text-gray-300">
-                                <CheckCircle className="h-4 w-4 text-green-500 mr-3 flex-shrink-0" />
-                                <span>{feature}</span>
-                              </div>
-                            ))}
-                          </div>
+                        {/* Features */}
+                        <div className="space-y-2 mb-5">
+                          {assessment.features.map((feature, fi) => (
+                            <div key={fi} className="flex items-center text-xs text-gray-600 dark:text-gray-300">
+                              <CheckCircle className="h-3.5 w-3.5 text-green-500 mr-2 flex-shrink-0" />
+                              <span>{feature}</span>
+                            </div>
+                          ))}
+                        </div>
 
-                          {/* CTA Button */}
-                          <div className={`w-full text-center py-3 px-6 rounded-lg ${colors.bg} ${colors.hover} text-white font-semibold transition-all duration-300 flex items-center justify-center space-x-2`}>
-                            <span>{t('assessmentPage.startAssessment')}</span>
-                            <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-                          </div>
+                        {/* CTA */}
+                        <div className={`w-full text-center py-3 px-5 rounded-lg ${colors.bg} ${colors.hover} text-white font-semibold text-sm transition-all flex items-center justify-center gap-2`}>
+                          <span>{t('assessmentPage.startAssessment')}</span>
+                          <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                         </div>
                       </div>
                     </Link>
@@ -158,98 +156,18 @@ const AssessmentPage = () => {
               })}
             </div>
 
-            {/* About Assessments Section */}
+            {/* Do-both nudge */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="mb-12"
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="mb-10 max-w-3xl"
             >
-              <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-8">
-                <div className="text-center">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-50 dark:bg-orange-900/20 rounded-full mb-6">
-                    <Info className="h-8 w-8 text-orange-500 dark:text-orange-400" />
-                  </div>
-                  
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                    {t('assessmentPage.aboutSection.title')}
-                  </h3>
-                  <p className="text-lg text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                    {t('assessmentPage.aboutSection.description')}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Why Choose Our Assessments Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-            >
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                  {t('assessmentPage.whyChoose.title')}
-                </h2>
-                <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                  {t('assessmentPage.whyChoose.subtitle')}
+              <div className="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800 rounded-xl p-4 flex items-start gap-3">
+                <Zap className="w-5 h-5 text-indigo-500 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-indigo-800 dark:text-indigo-200">
+                  <strong>Get the full picture.</strong> Doing both assessments unlocks your combined Privacy Score and a personalised action plan in your dashboard.
                 </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {[
-                  {
-                    icon: Zap,
-                    title: t('assessmentPage.whyChoose.features.quick.title'),
-                    description: t('assessmentPage.whyChoose.features.quick.description'),
-                    color: 'yellow'
-                  },
-                  {
-                    icon: Target,
-                    title: t('assessmentPage.whyChoose.features.personalized.title'),
-                    description: t('assessmentPage.whyChoose.features.personalized.description'),
-                    color: 'orange'
-                  },
-                  {
-                    icon: BookOpen,
-                    title: t('assessmentPage.whyChoose.features.educational.title'),
-                    description: t('assessmentPage.whyChoose.features.educational.description'),
-                    color: 'green'
-                  },
-                  {
-                    icon: CheckCircle,
-                    title: t('assessmentPage.whyChoose.features.expert.title'),
-                    description: t('assessmentPage.whyChoose.features.expert.description'),
-                    color: 'blue'
-                  }
-                ].map((feature, index) => {
-                  const Icon = feature.icon;
-                  const colorMap = {
-                    yellow: 'text-yellow-500 bg-yellow-50 dark:bg-yellow-900/20',
-                    orange: 'text-orange-500 bg-orange-50 dark:bg-orange-900/20',
-                    green: 'text-green-500 bg-green-50 dark:bg-green-900/20',
-                    blue: 'text-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                  };
-                  return (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
-                      className="text-center group"
-                    >
-                      <div className={`inline-flex items-center justify-center w-16 h-16 ${colorMap[feature.color]} rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                        <Icon className="h-8 w-8" />
-                      </div>
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                        {feature.title}
-                      </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-300">
-                        {feature.description}
-                      </p>
-                    </motion.div>
-                  );
-                })}
               </div>
             </motion.div>
           </div>
@@ -260,4 +178,3 @@ const AssessmentPage = () => {
 };
 
 export default AssessmentPage;
-

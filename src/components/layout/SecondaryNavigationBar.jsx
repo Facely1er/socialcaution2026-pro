@@ -425,8 +425,8 @@ const SecondaryNavigationBar = () => {
 
           {/* Right: Progress and Current Step Indicators - compact size to match header buttons */}
           <div className="flex items-center gap-1 flex-shrink-0">
-            {/* Progress Indicator - Clickable */}
-            <button
+            {/* Progress Indicator - only shown after user has taken at least one action */}
+            {progress > 0 && <button
               onClick={() => {
                 try {
                   const workflowStatus = checkWorkflowCompletion();
@@ -461,7 +461,7 @@ const SecondaryNavigationBar = () => {
                   {progress}%
                 </span>
               </div>
-            </button>
+            </button>}
 
             {/* Current Step Indicator - Clickable */}
             {currentStep && currentStep.path ? (() => {

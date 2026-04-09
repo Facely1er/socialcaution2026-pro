@@ -116,41 +116,35 @@ const Footer = () => {
 
           {/* Legal */}
           <div className="lg:col-span-2 lg:pl-2">
-            <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-1">{t('footer.sections.legal')}</h4>
+            <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">{t('footer.sections.legal')}</h4>
             <ul className="space-y-0">
               <li>
-                <Link 
-                  to="/privacy-policy" 
-                  className="flex items-center text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-white transition-colors group py-0.5 min-h-[20px] touch-manipulation cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
+                <Link
+                  to="/privacy-policy"
+                  className="flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors group py-0.5 min-h-[20px] touch-manipulation cursor-pointer"
+                  onClick={(e) => { e.stopPropagation(); }}
                 >
-                  <ShieldCheck className="w-3.5 h-3.5 mr-1.5 text-purple-500 dark:text-purple-400 group-hover:text-purple-600 dark:group-hover:text-purple-300 flex-shrink-0" />
+                  <ShieldCheck className="w-3 h-3 mr-1.5 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                   <span className="text-xs whitespace-nowrap">{t('footer.links.privacyPolicy')}</span>
                 </Link>
               </li>
               <li>
-                <Link 
-                  to="/terms" 
-                  className="flex items-center text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-white transition-colors group py-0.5 min-h-[20px] touch-manipulation cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
+                <Link
+                  to="/terms"
+                  className="flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors group py-0.5 min-h-[20px] touch-manipulation cursor-pointer"
+                  onClick={(e) => { e.stopPropagation(); }}
                 >
-                  <FileText className="w-3.5 h-3.5 mr-1.5 text-orange-500 dark:text-orange-400 group-hover:text-orange-600 dark:group-hover:text-orange-300 flex-shrink-0" />
+                  <FileText className="w-3 h-3 mr-1.5 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                   <span className="text-xs whitespace-nowrap">{t('footer.links.termsOfService')}</span>
                 </Link>
               </li>
               <li>
-                <Link 
-                  to="/cookie-policy" 
-                  className="flex items-center text-gray-700 dark:text-gray-300 hover:text-yellow-600 dark:hover:text-white transition-colors group py-0.5 min-h-[20px] touch-manipulation cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
+                <Link
+                  to="/cookie-policy"
+                  className="flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors group py-0.5 min-h-[20px] touch-manipulation cursor-pointer"
+                  onClick={(e) => { e.stopPropagation(); }}
                 >
-                  <Cookie className="w-3.5 h-3.5 mr-1.5 text-yellow-500 dark:text-yellow-400 group-hover:text-yellow-600 dark:group-hover:text-yellow-300 flex-shrink-0" />
+                  <Cookie className="w-3 h-3 mr-1.5 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                   <span className="text-xs whitespace-nowrap">{t('footer.links.cookiePolicy')}</span>
                 </Link>
               </li>
@@ -158,21 +152,19 @@ const Footer = () => {
                 <button
                   type="button"
                   onClick={() => openPreferences()}
-                  className="flex items-center w-full text-left text-gray-700 dark:text-gray-300 hover:text-yellow-600 dark:hover:text-white transition-colors group py-0.5 min-h-[20px] touch-manipulation cursor-pointer"
+                  className="flex items-center w-full text-left text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors group py-0.5 min-h-[20px] touch-manipulation cursor-pointer"
                 >
-                  <Settings className="w-3.5 h-3.5 mr-1.5 text-yellow-500 dark:text-yellow-400 group-hover:text-yellow-600 dark:group-hover:text-yellow-300 flex-shrink-0" />
+                  <Settings className="w-3 h-3 mr-1.5 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                   <span className="text-xs whitespace-nowrap">{t('cookieBanner.cookiePreferences')}</span>
                 </button>
               </li>
               <li>
-                <Link 
-                  to="/acceptable-use-policy" 
-                  className="flex items-center text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-white transition-colors group py-0.5 min-h-[20px] touch-manipulation cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
+                <Link
+                  to="/acceptable-use-policy"
+                  className="flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors group py-0.5 min-h-[20px] touch-manipulation cursor-pointer"
+                  onClick={(e) => { e.stopPropagation(); }}
                 >
-                  <Ban className="w-3.5 h-3.5 mr-1.5 text-red-500 dark:text-red-400 group-hover:text-red-600 dark:group-hover:text-red-300 flex-shrink-0" />
+                  <Ban className="w-3 h-3 mr-1.5 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                   <span className="text-xs whitespace-nowrap">{t('footer.links.acceptableUsePolicy')}</span>
                 </Link>
               </li>
@@ -259,11 +251,6 @@ const Footer = () => {
                 <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Local browser-based analysis</span>
               </div>
               
-              {/* Version tag */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 text-gray-600 dark:text-gray-400">
-                <CheckCircle2 className="w-4 h-4 text-blue-500 dark:text-blue-400" />
-                <span className="text-xs font-medium">Version 1.0</span>
-              </div>
             </div>
 
             {/* Right side - Copyright */}

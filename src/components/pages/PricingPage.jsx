@@ -31,12 +31,17 @@ import {
 } from 'lucide-react';
 import { PRODUCTS, ANNUAL_DISCOUNT, getCheckoutConfig } from '../../config/stripe';
 import { useTranslation } from '../../contexts/TranslationContext';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 
 const PricingPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [billingPeriod, setBillingPeriod] = useState('monthly');
   const [loading, setLoading] = useState(null);
+  const [assessmentResults] = useLocalStorage('socialcaution_results', null);
+  const [persona] = useLocalStorage('socialcaution_persona', null);
+  // Show "Best for your profile" when the user has assessment data or set concerns
+  const hasPremiumSignal = !!(assessmentResults?.exposureScore || persona?.customConcerns?.length);
 
   const handleCheckout = useCallback(async (planKey) => {
     try {
@@ -85,6 +90,22 @@ const PricingPage = () => {
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             {t('pricing.subtitle')}
           </p>
+        </div>
+
+        {/* Trust banner */}
+        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 mb-8 sm:mb-10 text-sm text-gray-600 dark:text-gray-400">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
+            <span>Free plan, no credit card needed</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <UserCheck className="w-4 h-4 text-blue-500 flex-shrink-0" />
+            <span>100% on-device — your data never leaves your browser</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Lock className="w-4 h-4 text-purple-500 flex-shrink-0" />
+            <span>Cancel anytime</span>
+          </div>
         </div>
 
         {/* Subscription Plans */}
@@ -197,6 +218,15 @@ const PricingPage = () => {
 
           {/* Standard (Subscription) Plan */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl border-2 border-red-500 dark:border-red-600 p-8 relative hover:shadow-2xl transition-shadow">
+            {/* Contextual best-for-you badge */}
+            {hasPremiumSignal && (
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-500 text-white text-xs font-semibold shadow">
+                  <Sparkles className="w-3 h-3" />
+                  Best for your profile
+                </span>
+              </div>
+            )}
             <div className="text-center mb-6">
               <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-red-100 to-red-50 dark:from-red-900/30 dark:to-red-800/20 rounded-2xl mb-4 border-2 border-red-500 dark:border-red-600 shadow-lg">
                 <Sparkles className="w-10 h-10 text-red-600 dark:text-red-400" />
@@ -220,15 +250,15 @@ const PricingPage = () => {
                   </button>
                   <button
                     onClick={() => setBillingPeriod('annual')}
-                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1.5 ${
                       billingPeriod === 'annual'
                         ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
                         : 'text-gray-600 dark:text-gray-400'
                     }`}
                   >
                     {t('pricing.billing.annual')}
-                    <span className="ml-1 text-xs text-green-600 dark:text-green-400">
-                      {t('pricing.billing.save', { percent: Math.round(ANNUAL_DISCOUNT * 100) })}
+                    <span className="px-1.5 py-0.5 rounded bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 text-[10px] font-bold leading-none">
+                      −{Math.round(ANNUAL_DISCOUNT * 100)}%
                     </span>
                   </button>
                 </div>
