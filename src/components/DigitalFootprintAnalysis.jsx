@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Activity, Shield, AlertTriangle, TrendingDown, TrendingUp, Globe, Users, ShoppingCart, MessageCircle, Film, Database, BarChart3, Target, ArrowRight, ExternalLink, Gauge, Info } from 'lucide-react';
 import { serviceCatalog } from '../data/serviceCatalog';
@@ -260,159 +260,100 @@ const DigitalFootprintAnalysis = ({ assessmentResults, selectedServices, persona
 
   const { footprintScore, totalServices, serviceCategories, serviceRisks, socialFootprint, dataExposure, recommendations, overallRisk, averageExposureIndex, averageExposureLevel } = footprintData;
 
-  const riskColor = overallRisk === 'high' ? 'red' : overallRisk === 'moderate' ? 'yellow' : 'green';
   const riskBgColor = overallRisk === 'high' ? 'bg-red-100 dark:bg-red-900/30' : overallRisk === 'moderate' ? 'bg-yellow-100 dark:bg-yellow-900/30' : 'bg-green-100 dark:bg-green-900/30';
   const riskTextColor = overallRisk === 'high' ? 'text-red-700 dark:text-red-400' : overallRisk === 'moderate' ? 'text-yellow-700 dark:text-yellow-400' : 'text-green-700 dark:text-green-400';
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [showScoreInfo, setShowScoreInfo] = useState(false);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              Digital Privacy Footprint Analysis
-            </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-300">
-              Comprehensive analysis combining your service Exposure Indices with assessment data
-            </p>
-            <div className="bg-purple-50 dark:bg-purple-900/20 border-l-4 border-purple-500 p-3 mt-3 rounded-r">
-              <p className="text-xs text-purple-900 dark:text-purple-200">
-                <strong>Understanding the Terms:</strong> Each service has a <strong>Service Exposure Index</strong> (0-100) shown in the catalog. 
-                Your <strong>Digital Footprint Score</strong> is calculated from these service indices. The <strong>Combined Exposure Index</strong> 
-                combines your assessment (60%) with your digital footprint (40%).
-              </p>
-            </div>
-            {selectedServices && selectedServices.length > 0 && (
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                Based on {selectedServices.length} service{selectedServices.length !== 1 ? 's' : ''} from your Services Monitoring
-              </p>
-            )}
-          </div>
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
-          >
-            Back to Dashboard
-          </button>
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-1">
+            Digital Privacy Footprint
+          </h1>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
+            {selectedServices && selectedServices.length > 0
+              ? `Based on ${selectedServices.length} service${selectedServices.length !== 1 ? 's' : ''} from your Services Monitoring`
+              : 'Based on your assessment results'}
+          </p>
         </div>
+        <button
+          onClick={() => navigate('/dashboard')}
+          className="flex-shrink-0 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors text-sm"
+        >
+          ← Dashboard
+        </button>
       </div>
 
-      {/* Overall Footprint Score */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 mb-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-              Your Digital Footprint Score
-              <span className="text-sm font-normal text-gray-500 dark:text-gray-400" title="Aggregate score (0-100, higher = more risk) calculated from your selected services' Privacy Exposure Indices. This is different from individual Service Exposure Indices shown in the catalog.">
-                ℹ️
-              </span>
-            </h2>
-            <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-3 mb-3 rounded-r">
-              <p className="text-xs text-blue-900 dark:text-blue-200">
-                <strong>Understanding Your Score:</strong> This is your <strong>personal Digital Footprint Score</strong> (0-100, higher = more risk) calculated from your selected services' Privacy Exposure Indices. 
-                Individual services have their own <strong>Service Exposure Index</strong> scores shown in Services Monitoring. 
-                This score contributes 40% to your Combined Risk Score.
-              </p>
-            </div>
-            <p className="text-gray-600 dark:text-gray-300 mb-2">
-              {footprintScore >= 70 
-                ? 'Your digital footprint is large. Consider taking action to reduce your online exposure.'
-                : footprintScore >= 40
-                ? 'Your digital footprint is moderate. There are opportunities to reduce your exposure.'
-                : 'Your digital footprint is relatively small. Keep up the good privacy practices!'}
-            </p>
-            {averageExposureIndex !== null && (
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Average Service Exposure Index: <span className="font-medium">{averageExposureIndex}/100</span> ({averageExposureLevel.level})
-              </p>
-            )}
-          </div>
-          <div className="text-center">
-            <div className={`text-5xl font-bold ${riskTextColor} mb-2`}>
-              {footprintScore}
-            </div>
-            <div className={`px-4 py-2 rounded-full ${riskBgColor} ${riskTextColor} font-medium text-sm`}>
+      {/* Score + key metrics row */}
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-5 mb-5">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-5">
+          {/* Big score */}
+          <div className="text-center flex-shrink-0">
+            <div className={`text-6xl font-bold ${riskTextColor}`}>{footprintScore}</div>
+            <div className={`mt-1 px-3 py-1 rounded-full text-xs font-semibold ${riskBgColor} ${riskTextColor} inline-block`}>
               {overallRisk.toUpperCase()} FOOTPRINT
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Metrics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-4">
-          <div className="flex items-center justify-between mb-2">
-            <Globe className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-            <span className="text-2xl font-bold text-gray-900 dark:text-white">{totalServices}</span>
-          </div>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Services Tracked</p>
-        </div>
-        {averageExposureIndex !== null && (
-          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-4">
-            <div className="flex items-center justify-between mb-2">
-              <Gauge className={`w-5 h-5 ${averageExposureLevel.textColor}`} />
-              <span className={`text-2xl font-bold ${averageExposureLevel.textColor}`}>
-                {averageExposureIndex}
-              </span>
-            </div>
-            <p className="text-sm text-gray-600 dark:text-gray-300">Avg. Exposure Index</p>
-            <p className={`text-xs mt-1 ${averageExposureLevel.textColor} font-medium`}>
-              {averageExposureLevel.level}
+          {/* Interpretive text + metrics */}
+          <div className="flex-1 min-w-0">
+            <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
+              {footprintScore >= 70
+                ? 'Your digital footprint is large. Take action to reduce your online exposure.'
+                : footprintScore >= 40
+                ? 'Your digital footprint is moderate. There are clear opportunities to reduce exposure.'
+                : 'Your digital footprint is relatively small. Keep up the good practices!'}
             </p>
-          </div>
-        )}
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-4">
-          <div className="flex items-center justify-between mb-2">
-            <Activity className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-            <span className="text-2xl font-bold text-gray-900 dark:text-white">{100 - footprintData.exposureScore}</span>
-          </div>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Exposure Risk</p>
-        </div>
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-4">
-          <div className="flex items-center justify-between mb-2">
-            <Users className="w-5 h-5 text-pink-600 dark:text-pink-400" />
-            <span className="text-2xl font-bold text-gray-900 dark:text-white capitalize">{socialFootprint.usage}</span>
-          </div>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Social Media Use</p>
-        </div>
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-4">
-          <div className="flex items-center justify-between mb-2">
-            <Shield className="w-5 h-5 text-green-600 dark:text-green-400" />
-            <span className="text-2xl font-bold text-gray-900 dark:text-white">{footprintData.rightsScore}</span>
-          </div>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Rights Exercise Score</p>
-        </div>
-      </div>
-
-      {/* Relationship Explanation */}
-      {selectedServices && selectedServices.length > 0 && (
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl shadow-sm border border-blue-200 dark:border-blue-800 p-6 mb-6">
-          <div className="flex items-start gap-3">
-            <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                How This Analysis Works
-              </h3>
-              <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-                Your Digital Privacy Footprint Score combines:
-              </p>
-              <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1 list-disc list-inside mb-3">
-                <li>Individual service <strong>Privacy Exposure Indices</strong> from your Services Monitoring</li>
-                <li>Your privacy assessment results (exposure and rights scores)</li>
-                <li>Service category breakdown and risk analysis</li>
-                <li>Social media usage and data sharing patterns</li>
-              </ul>
-              <button
-                onClick={() => navigate('/service-catalog')}
-                className="text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium flex items-center gap-1"
-              >
-                View individual service exposure indices →
-              </button>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="bg-gray-50 dark:bg-slate-700 rounded-lg p-2 text-center">
+                <div className="text-lg font-bold text-gray-900 dark:text-white">{totalServices}</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">Services</div>
+              </div>
+              {averageExposureIndex !== null && (
+                <div className="bg-gray-50 dark:bg-slate-700 rounded-lg p-2 text-center">
+                  <div className={`text-lg font-bold ${averageExposureLevel.textColor}`}>{averageExposureIndex}</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">Avg. Exposure</div>
+                </div>
+              )}
+              <div className="bg-gray-50 dark:bg-slate-700 rounded-lg p-2 text-center">
+                <div className="text-lg font-bold text-gray-900 dark:text-white">{100 - footprintData.exposureScore}</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">Exposure Risk</div>
+              </div>
+              <div className="bg-gray-50 dark:bg-slate-700 rounded-lg p-2 text-center">
+                <div className="text-lg font-bold text-gray-900 dark:text-white capitalize">{socialFootprint.usage}</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">Social Use</div>
+              </div>
             </div>
           </div>
         </div>
-      )}
+
+        {/* Collapsible "How scores work" — single source of truth for all explanations */}
+        <div className="mt-4 border-t border-gray-100 dark:border-slate-700 pt-3">
+          <button
+            type="button"
+            onClick={() => setShowScoreInfo(v => !v)}
+            className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+          >
+            <Info className="w-3.5 h-3.5" />
+            {showScoreInfo ? 'Hide' : 'How are these scores calculated?'}
+          </button>
+          {showScoreInfo && (
+            <div className="mt-2 text-xs text-gray-600 dark:text-gray-400 space-y-1">
+              <p><strong>Digital Footprint Score (0–100)</strong> — aggregated from the Privacy Exposure Indices of your tracked services. Higher = more risk.</p>
+              <p><strong>Avg. Exposure Index</strong> — the mean Privacy Exposure Index across your services (each shown individually in the catalog).</p>
+              <p><strong>Combined Risk Score</strong> — your assessment score (60%) + this footprint score (40%).</p>
+              {selectedServices && selectedServices.length > 0 && (
+                <button onClick={() => navigate('/service-catalog')} className="text-blue-600 dark:text-blue-400 hover:underline font-medium mt-1 block">
+                  View individual service indices →
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Service Categories */}
       {serviceCategories.length > 0 && (

@@ -342,8 +342,11 @@ const AssessmentResults = ({ exposureResults, rightsResults, completeAssessmentR
   const primaryPersona = PersonaProfiles[detectedPersona.primary];
   const personaColor = PersonaColors[primaryPersona.color];
 
+  // Top 3 quick wins for the callout (first 3, string or object)
+  const topQuickWins = quickWins.slice(0, 3).map(w => typeof w === 'string' ? w : w.title || w);
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-900 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-900 py-8 pb-28">
       <div className="max-w-6xl mx-auto px-4">
         {/* Navigation Header */}
         <div className="flex items-center justify-between mb-6">
@@ -497,6 +500,35 @@ const AssessmentResults = ({ exposureResults, rightsResults, completeAssessmentR
             </div>
           )}
         </div>
+
+        {/* Top Quick Wins callout — visible before any scrolling */}
+        {topQuickWins.length > 0 && (
+          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-start gap-3">
+            <div className="flex-shrink-0 w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+              <Zap className="w-4 h-4 text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-green-800 dark:text-green-200 mb-1.5">
+                3 quick wins you can do today
+              </p>
+              <ol className="space-y-1">
+                {topQuickWins.map((win, i) => (
+                  <li key={i} className="flex items-start gap-2 text-xs text-green-700 dark:text-green-300">
+                    <span className="font-bold flex-shrink-0">{i + 1}.</span>
+                    <span>{win}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+            <button
+              type="button"
+              onClick={() => navigate('/dashboard')}
+              className="flex-shrink-0 text-xs font-semibold text-green-700 dark:text-green-300 underline underline-offset-2 hover:text-green-900 dark:hover:text-green-100 transition-colors"
+            >
+              See full plan →
+            </button>
+          </div>
+        )}
 
         {/* Detected Persona */}
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-8 mb-6">
@@ -1289,6 +1321,28 @@ const AssessmentResults = ({ exposureResults, rightsResults, completeAssessmentR
             persona: detectedPersona?.primary
           }}
         />
+      </div>
+
+      {/* Sticky next-step CTA — always visible at the bottom */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-700 shadow-xl px-4 py-3 sm:py-4">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="text-center sm:text-left">
+            <p className="text-sm font-semibold text-gray-900 dark:text-white">
+              Your dashboard is ready
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              See your full action plan, track progress, and get service alerts.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => navigate('/dashboard')}
+            className="flex-shrink-0 flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
+          >
+            Go to Dashboard
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     </div>
   );

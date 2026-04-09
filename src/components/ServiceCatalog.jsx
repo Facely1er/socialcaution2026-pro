@@ -1407,59 +1407,54 @@ const ServiceCatalog = () => {
                     </div>
                   )}
                   
-                  {/* Action Buttons Row */}
-                  <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-200 dark:border-gray-600">
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedServiceForDetails(service.id);
-                      }}
-                      className="flex-1 px-2 py-1.5 text-xs font-medium bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors flex items-center justify-center gap-1"
-                    >
-                      <Info className="w-3 h-3" />
-                      Details
-                    </button>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleServiceSelection(service.id);
-                      }}
-                      className={`flex-1 px-2 py-1.5 text-xs font-medium rounded transition-colors flex items-center justify-center gap-1 ${
-                        isSelected
-                          ? 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/30'
-                          : 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/30'
-                      }`}
-                    >
-                      {isSelected ? (
-                        <>
+                  {/* Action Buttons — Monitor is the primary CTA */}
+                  <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-600">
+                    {isSelected ? (
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 flex items-center gap-1.5 px-2 py-1.5 rounded bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 text-xs font-semibold">
+                          <CheckCircle className="w-3 h-3 flex-shrink-0" />
+                          Monitoring
+                        </div>
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); toggleNotificationPreference(service.id); }}
+                          className="px-2 py-1.5 rounded bg-white dark:bg-slate-600 hover:bg-gray-100 dark:hover:bg-slate-500 transition-colors border border-gray-200 dark:border-gray-500"
+                          title={notificationsEnabled ? 'Disable notifications' : 'Enable notifications'}
+                        >
+                          {notificationsEnabled ? (
+                            <Bell className="w-3 h-3 text-blue-600" />
+                          ) : (
+                            <BellOff className="w-3 h-3 text-gray-400" />
+                          )}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); toggleServiceSelection(service.id); }}
+                          className="px-2 py-1.5 rounded text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                          title="Remove from monitoring"
+                        >
                           <X className="w-3 h-3" />
-                          Remove
-                        </>
-                      ) : (
-                        <>
-                          <CheckCircle className="w-3 h-3" />
-                          Select
-                        </>
-                      )}
-                    </button>
-                    {isSelected && (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleNotificationPreference(service.id);
-                        }}
-                        className="px-2 py-1.5 text-xs rounded bg-white dark:bg-slate-600 hover:bg-gray-100 dark:hover:bg-slate-500 transition-colors border border-gray-200 dark:border-gray-500"
-                        title={notificationsEnabled ? 'Disable notifications' : 'Enable notifications'}
-                      >
-                        {notificationsEnabled ? (
-                          <Bell className="w-3 h-3 text-blue-600" />
-                        ) : (
-                          <BellOff className="w-3 h-3 text-gray-400" />
-                        )}
-                      </button>
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); toggleServiceSelection(service.id); }}
+                          className="flex-1 py-2 px-3 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold rounded-lg transition-colors flex items-center justify-center gap-1.5"
+                        >
+                          <Bell className="w-3 h-3" />
+                          Monitor
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); setSelectedServiceForDetails(service.id); }}
+                          className="px-2 py-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                          title="View details"
+                        >
+                          <Info className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -1602,59 +1597,54 @@ const ServiceCatalog = () => {
                         </div>
                       )}
 
-                      {/* Action Buttons Row (same as rated: Details, Select/Remove, Notifications when selected) */}
-                      <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-200 dark:border-gray-600">
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedServiceForDetails(service.id);
-                          }}
-                          className="flex-1 px-2 py-1.5 text-xs font-medium bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors flex items-center justify-center gap-1"
-                        >
-                          <Info className="w-3 h-3" />
-                          Details
-                        </button>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleServiceSelection(service.id);
-                          }}
-                          className={`flex-1 px-2 py-1.5 text-xs font-medium rounded transition-colors flex items-center justify-center gap-1 ${
-                            isSelected
-                              ? 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/30'
-                              : 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/30'
-                          }`}
-                        >
-                          {isSelected ? (
-                            <>
+                      {/* Action Buttons — Monitor is the primary CTA */}
+                      <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-600">
+                        {isSelected ? (
+                          <div className="flex items-center gap-2">
+                            <div className="flex-1 flex items-center gap-1.5 px-2 py-1.5 rounded bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 text-xs font-semibold">
+                              <CheckCircle className="w-3 h-3 flex-shrink-0" />
+                              Monitoring
+                            </div>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); toggleNotificationPreference(service.id); }}
+                              className="px-2 py-1.5 rounded bg-white dark:bg-slate-600 hover:bg-gray-100 dark:hover:bg-slate-500 transition-colors border border-gray-200 dark:border-gray-500"
+                              title={notificationsEnabled ? 'Disable notifications' : 'Enable notifications'}
+                            >
+                              {notificationsEnabled ? (
+                                <Bell className="w-3 h-3 text-blue-600" />
+                              ) : (
+                                <BellOff className="w-3 h-3 text-gray-400" />
+                              )}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); toggleServiceSelection(service.id); }}
+                              className="px-2 py-1.5 rounded text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                              title="Remove from monitoring"
+                            >
                               <X className="w-3 h-3" />
-                              Remove
-                            </>
-                          ) : (
-                            <>
-                              <CheckCircle className="w-3 h-3" />
-                              Select
-                            </>
-                          )}
-                        </button>
-                        {isSelected && (
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              toggleNotificationPreference(service.id);
-                            }}
-                            className="px-2 py-1.5 text-xs rounded bg-white dark:bg-slate-600 hover:bg-gray-100 dark:hover:bg-slate-500 transition-colors border border-gray-200 dark:border-gray-500"
-                            title={notificationsEnabled ? 'Disable notifications' : 'Enable notifications'}
-                          >
-                            {notificationsEnabled ? (
-                              <Bell className="w-3 h-3 text-blue-600" />
-                            ) : (
-                              <BellOff className="w-3 h-3 text-gray-400" />
-                            )}
-                          </button>
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); toggleServiceSelection(service.id); }}
+                              className="flex-1 py-2 px-3 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold rounded-lg transition-colors flex items-center justify-center gap-1.5"
+                            >
+                              <Bell className="w-3 h-3" />
+                              Monitor
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); setSelectedServiceForDetails(service.id); }}
+                              className="px-2 py-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                              title="View details"
+                            >
+                              <Info className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -2164,8 +2154,8 @@ const ServiceCatalog = () => {
                         </>
                       ) : (
                         <>
-                          <CheckCircle className="w-4 h-4" />
-                          Add to My Services
+                          <Bell className="w-4 h-4" />
+                          Monitor
                         </>
                       )}
                     </button>
