@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Shield, AlertTriangle, CheckCircle, Bell, BellOff, Search, Filter, ArrowRight, Info, ExternalLink, Download, TrendingUp, TrendingDown, BarChart3, FileText, Building, Scale, X, Gauge, AlertCircle, Target, ChevronDown, ChevronUp, Database, Share2 } from 'lucide-react';
+import { Shield, AlertTriangle, CheckCircle, Bell, BellOff, Search, Filter, ArrowRight, Info, ExternalLink, Download, TrendingUp, TrendingDown, BarChart3, FileText, Building, Scale, X, Gauge, AlertCircle, Target, ChevronDown, ChevronUp, Database, Share2, Activity } from 'lucide-react';
 import { serviceCatalog } from '../data/serviceCatalog';
 import { getAllEnhancedServices, getEnhancedService } from '../data/serviceCatalogEnhanced';
 import { serviceRiskProfiles } from '../data/serviceRiskProfiles';
@@ -1677,6 +1677,54 @@ const ServiceCatalog = () => {
             </div>
           )}
         </div>
+
+        {/* DFA teaser — shown when user has 1-2 services (not yet at the 3-service unlock threshold) */}
+        {selectedServices.length >= 1 && selectedServices.length < 3 && (
+          <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border border-purple-200 dark:border-purple-700 rounded-xl p-5 mb-6 flex items-start gap-4">
+            <div className="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+              <Activity className="w-5 h-5 text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold uppercase tracking-wide text-purple-600 dark:text-purple-400 mb-0.5">Almost there</p>
+              <h3 className="text-base font-bold text-gray-900 dark:text-white mb-1">
+                Add {3 - selectedServices.length} more service{3 - selectedServices.length !== 1 ? 's' : ''} to unlock your Digital Footprint Score
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                Your 0–100 score combines everything — services, assessments, and habits. Monitor at least 3 services to get meaningful insights.
+              </p>
+              <div className="flex items-center gap-2">
+                <div className="flex gap-1">
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className={`w-4 h-4 rounded-full border-2 ${i <= selectedServices.length ? 'bg-purple-600 border-purple-600' : 'border-gray-300 dark:border-gray-600'}`} />
+                  ))}
+                </div>
+                <span className="text-xs text-gray-500 dark:text-gray-400">{selectedServices.length}/3 services monitored</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* DFA CTA — shown once user has 3+ services */}
+        {selectedServices.length >= 3 && (
+          <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border border-purple-200 dark:border-purple-700 rounded-xl p-5 mb-6 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Activity className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-purple-600 dark:text-purple-400 mb-0.5">Ready</p>
+                <p className="text-sm font-bold text-gray-900 dark:text-white">Your Digital Footprint Score is available</p>
+              </div>
+            </div>
+            <button
+              onClick={() => navigate('/digital-footprint-analysis')}
+              className="flex-shrink-0 inline-flex items-center gap-1.5 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold rounded-lg transition-colors"
+            >
+              View Score
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
 
         {/* Selected Services Risk Details */}
         {selectedServiceDetails.length > 0 && (

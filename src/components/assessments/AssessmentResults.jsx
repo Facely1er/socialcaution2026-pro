@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TrendingDown, TrendingUp, Shield, Scale, User, ChevronRight, Lock as LockIcon, Target, Zap, Clock, AlertCircle, CheckCircle2, Star, Trophy, ArrowRight, BookOpen, ChevronDown, ChevronUp, Activity } from 'lucide-react';
+import { TrendingDown, TrendingUp, Shield, Scale, User, ChevronRight, Lock as LockIcon, Target, Zap, Clock, AlertCircle, CheckCircle2, Star, Trophy, ArrowRight, BookOpen, ChevronDown, ChevronUp, Activity, FileCheck } from 'lucide-react';
 import ContextualLinks from '../common/ContextualLinks';
 import RelatedContent from '../common/RelatedContent';
 import LoadingSpinner from '../common/LoadingSpinner';
@@ -556,6 +556,41 @@ const AssessmentResults = ({ exposureResults, rightsResults, completeAssessmentR
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold rounded-lg transition-colors"
                   >
                     {hasServices ? 'See Full Analysis' : 'Add Services First'}
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* Rights Checkup promotion — only shown after Exposure assessment */}
+        {assessmentType === 'exposure' && (() => {
+          let hasRights = false;
+          try {
+            const stored = JSON.parse(localStorage.getItem('assessment-results') || '{}');
+            hasRights = !!(stored?.data?.rights);
+          } catch {}
+          if (hasRights) return null;
+          return (
+            <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border border-amber-200 dark:border-amber-700 rounded-xl p-5 mb-6">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <FileCheck className="w-5 h-5 text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-400 mb-0.5">Complete your picture</p>
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white mb-1">
+                    Take the Rights Checkup (~7 min)
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                    Know your exposure — now see if you're using your rights. The Rights Checkup unlocks your full combined Digital Footprint Score.
+                  </p>
+                  <button
+                    onClick={() => navigate('/assessment/privacy-rights')}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-lg transition-colors"
+                  >
+                    Take Rights Checkup
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
